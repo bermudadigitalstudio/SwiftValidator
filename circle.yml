@@ -1,0 +1,12 @@
+machine:
+  services:
+    - docker
+
+dependencies:
+  override:
+    - docker --version
+    - docker build -t validator_test -f Dockerfile~test .
+
+test:
+  override:
+    - docker run --rm validator_test
