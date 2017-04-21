@@ -12,6 +12,7 @@ public enum RuleType {
     case zipCode
     case integer(Int, Int)
     case minLength(Int)
+    case iban
 
     var rule: Rule {
         switch self {
@@ -21,6 +22,8 @@ public enum RuleType {
             return IntegerRule(min: min, max: max)
         case .minLength(let min):
             return MinLengthRule(min: min)
+        case .iban:
+            return IBANRule()
         }
     }
 }
