@@ -51,9 +51,28 @@ class ValidatorTests: XCTestCase {
         }
     }
 
+    func testEmailRule() {
+        let emailRule = EmailRule()
+
+        let validEmails = ["john.appleseed@apple.com", "hello@ap.co", "h@a.co", "hola@c.com.mx"]
+        let invalidEmails = ["Hello World","hello@apple", "helo@a.b"]
+
+        validEmails.forEach {
+            XCTAssertTrue(emailRule.validate(value: $0))
+        }
+
+        invalidEmails.forEach {
+            XCTAssertFalse(emailRule.validate(value: $0))
+        }
+
+
+
+    }
+
     static var allTests = [
         ("testZipRule", testZipRule),
         ("testIBANRule", testIBANRule),
-        ("testIntegerRule", testIntegerRule)
+        ("testIntegerRule", testIntegerRule),
+        ("testEmailRule", testEmailRule)
     ]
 }
