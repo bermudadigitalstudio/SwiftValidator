@@ -13,6 +13,7 @@ public enum RuleType {
     case integer(Int, Int)
     case minLength(Int)
     case iban
+    case email
 
     var rule: Rule {
         switch self {
@@ -24,7 +25,10 @@ public enum RuleType {
             return MinLengthRule(min: min)
         case .iban:
             return IBANRule()
+        case .email:
+            return EmailRule()
         }
+
     }
 }
 
