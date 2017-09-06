@@ -17,7 +17,8 @@ class ValidatorTests: XCTestCase {
     func testIBANRule() {
         let ibanRule = IBANRule()
 
-        let validIBAN = ["DE44500105175407324931",
+        let validIBAN = ["de 44500105175407324931",
+                         "DE44500105175407324931",
                          "DE44 5001 0517 5407 3249 31",
                          "GB82 WEST 1234 5698 7654 32",
                          "FR1420041010050500013M02606"]
