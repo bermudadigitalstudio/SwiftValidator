@@ -14,6 +14,7 @@ public enum RuleType {
     case minLength(Int)
     case iban
     case email
+    case double(Double, Double)
 
     var rule: Rule {
         switch self {
@@ -27,8 +28,9 @@ public enum RuleType {
             return IBANRule()
         case .email:
             return EmailRule()
+        case .double(let _min, let _max):
+            return ClosedRangeRule(range: min(_min, _max)...max(_min, _max))
         }
-
     }
 }
 
