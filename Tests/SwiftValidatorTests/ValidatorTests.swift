@@ -126,6 +126,7 @@ class ValidatorTests: XCTestCase {
         ("testIBANRule", testIBANRule),
         ("testIntegerRule", testIntegerRule),
         ("testEmailRule", testEmailRule),
-        ("testRangeRule", testRangeRule)
+        ("testRangeRule", testRangeRule),
+        ("testDoubleRule", testDoubleRule)
     ]
 }

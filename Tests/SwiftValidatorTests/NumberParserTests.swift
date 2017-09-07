@@ -11,7 +11,7 @@ import SwiftValidator
 
 class NumberParserTests: XCTestCase {
     
-    func testExample() {
+    func testParsing() {
         XCTAssertEqualWithAccuracy(parseNumber("1")!, 1.0, accuracy: 0.1)
         XCTAssertEqualWithAccuracy(parseNumber("1 kwH")!, 1.0, accuracy: 0.1)
         XCTAssertEqualWithAccuracy(parseNumber("-1 kwH")!, -1.0, accuracy: 0.1)
@@ -29,5 +29,7 @@ class NumberParserTests: XCTestCase {
         XCTAssertEqual(parseNumber("bla bla"), nil)
         XCTAssertEqual(parseNumber(""), nil)
     }
-    
+    static var allTests = [
+        ("testParsing", testParsing)
+    ]
 }

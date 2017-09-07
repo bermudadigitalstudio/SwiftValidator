@@ -3,4 +3,5 @@ import XCTest
 
 XCTMain([
     testCase(ValidatorTests.allTests),
+    testCase(NumberParserTests.allTests)
 ])
