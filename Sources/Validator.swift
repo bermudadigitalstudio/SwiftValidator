@@ -50,6 +50,7 @@ public class Validator {
 
     private var datas: [String: Any]
     private var validators: [Field] = []
+    private var validatedValues: [String: Any] = [:]
 
     public init(datas: [String: Any]) {
         self.datas = datas
@@ -67,6 +68,8 @@ public class Validator {
                 validator.rules.forEach { rule in
                     if !rule.rule.validate(value: fieldValue) {
                         errors[validator.name] = rule.rule.errorMessage()
+                    } else {
+                        validatedValues[validator.name] = rule.rule.validatedValue
                     }
                 }
             } else {
@@ -76,5 +79,9 @@ public class Validator {
             }
         }
         return errors
+    }
+    
+    public subscript(key: String) -> Any? {
+        return validatedValues[key]
     }
 }

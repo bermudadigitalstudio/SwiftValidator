@@ -73,32 +73,6 @@ class ValidatorTests: XCTestCase {
             XCTAssertFalse(emailRule.validate(value: $0))
         }
 
-
-
-    }
-    
-    func testRangeRule() {
-        let rule = RangeRule(range: 0.0..<1.0)
-        
-        [0.0, 0.1, 0.3, 0.999].forEach {
-            XCTAssertTrue(rule.validate(value: $0))
-        }
-        
-        [-0.1, 1.0, 3.0].forEach {
-            XCTAssertFalse(rule.validate(value: $0))
-        }
-    }
-    
-    func testClosedRangeRule() {
-        let rule = ClosedRangeRule(range: 0.0...1.0)
-        
-        [0.0, 0.1, 0.3, 0.999, 1.0].forEach {
-            XCTAssertTrue(rule.validate(value: $0))
-        }
-        
-        [-0.1, 1.1, 3.0].forEach {
-            XCTAssertFalse(rule.validate(value: $0))
-        }
     }
     
     func testDoubleRule() {
@@ -126,7 +100,6 @@ class ValidatorTests: XCTestCase {
         ("testIBANRule", testIBANRule),
         ("testIntegerRule", testIntegerRule),
         ("testEmailRule", testEmailRule),
-        ("testRangeRule", testRangeRule),
         ("testDoubleRule", testDoubleRule)
     ]
 }

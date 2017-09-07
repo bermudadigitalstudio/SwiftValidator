@@ -12,6 +12,8 @@ public class IBANRule: Rule {
 
     private let defaultsFormats = ["DE":"DE\\d{20}","GB":"GB\\d{2}[A-Z]{4}\\d{14}", "FR":"FR\\d{12}[A-Z0-9]{11}\\d{2}"]
 
+    private(set) public var validatedValue: Any?
+    
     /// Validate an International Bank Account Number (IBAN)
     ///
     /// see https://en.wikipedia.org/wiki/International_Bank_Account_Number
@@ -37,7 +39,13 @@ public class IBANRule: Rule {
 
         guard matches == 1 else { return false }
 
-        return checkDigits(value: valueSanitized)
+        let valid = checkDigits(value: valueSanitized)
+        
+        if valid {
+            validatedValue = value
+        }
+        
+        return valid
     }
 
     public func errorMessage() -> String {

@@ -12,6 +12,8 @@ public class DoubleRule: Rule {
     private let min: Double
     private let max: Double
     
+    private(set) public var validatedValue: Any?
+    
     public init(min: Double, max: Double) {
         self.min = min
         self.max = max
@@ -26,6 +28,9 @@ public class DoubleRule: Rule {
         }
         
         guard let n = number, n >= min, n <= max  else { return false }
+        
+        validatedValue = n
+        
         return true
     }
     

@@ -10,6 +10,8 @@ import Foundation
 public class EmailRule: Rule {
 
     private let emailFormat = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}"
+    
+    private(set) public var validatedValue: Any?
 
     public func validate(value: Any) -> Bool {
         guard let value = value as? String else { return false }
@@ -20,7 +22,11 @@ public class EmailRule: Rule {
 
         guard matches == 1 else { return false }
 
-        return matches == 1
+        let valid = matches == 1
+        if valid {
+            validatedValue = value
+        }
+        return valid
     }
 
     public func errorMessage() -> String {

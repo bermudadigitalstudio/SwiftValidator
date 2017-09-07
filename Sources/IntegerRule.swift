@@ -12,6 +12,8 @@ public class IntegerRule: Rule {
 
     let min: Int
     let max: Int
+    
+    private(set) public var validatedValue: Any?
 
     public init(min: Int, max: Int) {
         self.min = min
@@ -27,6 +29,7 @@ public class IntegerRule: Rule {
             number = Int(d)
         }
         guard let n = number, n >= min, n <= max  else { return false }
+        validatedValue = n
         return true
     }
 
