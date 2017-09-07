@@ -94,12 +94,42 @@ class ValidatorTests: XCTestCase {
             XCTAssertFalse(intRule.validate(value: $0))
         }
     }
+    
+    func testValidator() {
+        let v = Validator(datas: [
+            "a": "31500",
+            "b": "DE44500105175407324931",
+            "c": "250",
+            "d": "john.appleseed@apple.com",
+            "e": "1024,5 kWh",
+            "f": "kWh"])
+        
+        v.validate("a", rules: [.zipCode], required: true)
+        v.validate("b", rules: [.iban], required: true)
+        v.validate("c", rules: [.integer(1, 1000)], required: true)
+        v.validate("d", rules: [.email], required: true)
+        v.validate("e", rules: [.double(1, 2000)], required: true)
+        v.validate("f", rules: [.double(1, 2000)], required: true)
+        v.validate("g", rules: [.double(1, 2000)], required: true)
+        v.validate("h", rules: [.double(1, 2000)], required: false)
+        
+        let errors = v.validate()
+        XCTAssert(errors.count == 2)
+        
+        XCTAssertEqual(v["a"] as? String, "31500")
+        XCTAssertEqual(v["b"] as? String, "DE44500105175407324931")
+        XCTAssertEqual(v["c"] as? Int, 250)
+        XCTAssertEqual(v["d"] as? String, "john.appleseed@apple.com")
+        XCTAssertEqual(v["e"] as? Double, 1024.5)
+        XCTAssertEqual(v["f"] as? Double, nil)
+    }
 
     static var allTests = [
         ("testZipRule", testZipRule),
         ("testIBANRule", testIBANRule),
         ("testIntegerRule", testIntegerRule),
         ("testEmailRule", testEmailRule),
-        ("testDoubleRule", testDoubleRule)
+        ("testDoubleRule", testDoubleRule),
+        ("testValidator", testValidator)
     ]
 }

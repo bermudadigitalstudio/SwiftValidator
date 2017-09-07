@@ -63,13 +63,15 @@ public class Validator {
     public func validate() -> [String:String] {
 
         var errors: [String:String] = [:]
+        var values: [String:Any] = [:]
         validators.forEach { validator in
             if let fieldValue = datas[validator.name] {
-                validator.rules.forEach { rule in
-                    if !rule.rule.validate(value: fieldValue) {
-                        errors[validator.name] = rule.rule.errorMessage()
+                validator.rules.forEach { ruleType in
+                    let rule = ruleType.rule
+                    if !rule.validate(value: fieldValue) {
+                        errors[validator.name] = rule.errorMessage()
                     } else {
-                        validatedValues[validator.name] = rule.rule.validatedValue
+                        values[validator.name] = rule.validatedValue
                     }
                 }
             } else {
@@ -78,6 +80,7 @@ public class Validator {
                 }
             }
         }
+        validatedValues = values
         return errors
     }
     
