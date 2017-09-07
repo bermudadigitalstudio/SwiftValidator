@@ -19,7 +19,14 @@ public class IntegerRule: Rule {
     }
 
     public func validate(value: Any) -> Bool {
-        guard let value = value as? Int, value >= min, value <= max  else { return false }
+        var number: Int?
+        if let i = value as? Int {
+            number = i
+        } else if let s = value as? String,
+            let d = parseNumber(s){
+            number = Int(d)
+        }
+        guard let n = number, n >= min, n <= max  else { return false }
         return true
     }
 

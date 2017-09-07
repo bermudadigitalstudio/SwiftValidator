@@ -20,8 +20,8 @@ public enum RuleType {
         switch self {
         case .zipCode:
             return ZipCodeRule()
-        case .integer(let min, let max):
-            return IntegerRule(min: min, max: max)
+        case .integer(let _min, let _max):
+            return IntegerRule(min: min(_min, _max), max: max(_min, _max))
         case .minLength(let min):
             return MinLengthRule(min: min)
         case .iban:
@@ -29,7 +29,7 @@ public enum RuleType {
         case .email:
             return EmailRule()
         case .double(let _min, let _max):
-            return ClosedRangeRule(range: min(_min, _max)...max(_min, _max))
+            return DoubleRule(min: min(_min, _max), max: max(_min, _max))
         }
     }
 }

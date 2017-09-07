@@ -49,6 +49,14 @@ class ValidatorTests: XCTestCase {
         [500,9].forEach {
             XCTAssertFalse(intRule.validate(value: $0))
         }
+        
+        ["number is 10","250 kWh","I think it was 100 or so"].forEach {
+            XCTAssertTrue(intRule.validate(value: $0))
+        }
+        
+        ["500","9"].forEach {
+            XCTAssertFalse(intRule.validate(value: $0))
+        }
     }
 
     func testEmailRule() {
@@ -90,6 +98,26 @@ class ValidatorTests: XCTestCase {
         
         [-0.1, 1.1, 3.0].forEach {
             XCTAssertFalse(rule.validate(value: $0))
+        }
+    }
+    
+    func testDoubleRule() {
+        let intRule = DoubleRule(min: 10.0, max: 250.0)
+        
+        [10.0,250.0,100.0].forEach {
+            XCTAssertTrue(intRule.validate(value: $0))
+        }
+        
+        [500.0,9.0].forEach {
+            XCTAssertFalse(intRule.validate(value: $0))
+        }
+        
+        ["10,43","250","100"].forEach {
+            XCTAssertTrue(intRule.validate(value: $0))
+        }
+        
+        ["500,0","9,5"].forEach {
+            XCTAssertFalse(intRule.validate(value: $0))
         }
     }
 
