@@ -76,7 +76,7 @@ class ValidatorTests: XCTestCase {
     }
     
     func testDoubleRule() {
-        let intRule = DoubleRule(min: 10.0, max: 250.0)
+        let intRule = DoubleRule(min: 10, max: 250)
         
         [10.0,250.0,100.0].forEach {
             XCTAssertTrue(intRule.validate(value: $0))
@@ -102,6 +102,7 @@ class ValidatorTests: XCTestCase {
             "c": "250",
             "d": "john.appleseed@apple.com",
             "e": "1024,5 kWh",
+            "e1": 200,
             "f": "kWh"])
         
         v.validate("a", rules: [.zipCode], required: true)
@@ -109,6 +110,7 @@ class ValidatorTests: XCTestCase {
         v.validate("c", rules: [.integer(1, 1000)], required: true)
         v.validate("d", rules: [.email], required: true)
         v.validate("e", rules: [.double(1, 2000)], required: true)
+        v.validate("e1", rules: [.double(1, 2000)], required: true)
         v.validate("f", rules: [.double(1, 2000)], required: true)
         v.validate("g", rules: [.double(1, 2000)], required: true)
         v.validate("h", rules: [.double(1, 2000)], required: false)
@@ -121,6 +123,7 @@ class ValidatorTests: XCTestCase {
         XCTAssertEqual(v["c"] as? Int, 250)
         XCTAssertEqual(v["d"] as? String, "john.appleseed@apple.com")
         XCTAssertEqual(v["e"] as? Double, 1024.5)
+        XCTAssertEqual(v["e1"] as? Double, 200)
         XCTAssertEqual(v["f"] as? Double, nil)
     }
 

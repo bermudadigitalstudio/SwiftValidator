@@ -25,6 +25,8 @@ public class DoubleRule: Rule {
             number = d
         } else if let s = value as? String {
             number = parseNumber(s)
+        } else if let i = value as? Int {
+            number = Double(i)
         }
         
         guard let n = number, n >= min, n <= max  else { return false }
