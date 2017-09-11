@@ -15,6 +15,8 @@ public enum RuleType {
     case iban
     case email
     case double(Double, Double)
+    case date(Date, Date, DateFormatter)
+    case multiMinLength(CharacterSet, [Int])
 
     var rule: Rule {
         switch self {
@@ -30,6 +32,10 @@ public enum RuleType {
             return EmailRule()
         case .double(let _min, let _max):
             return DoubleRule(min: min(_min, _max), max: max(_min, _max))
+        case .date(let low, let high, let f):
+            return DateRule(lowBound: low, highBound: high, dateFormatter: f)
+        case .multiMinLength(let separator, let length):
+            return MultiStringMinLengthRule(separator: separator, length: length)
         }
     }
 }

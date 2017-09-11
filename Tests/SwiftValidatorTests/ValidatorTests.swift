@@ -95,7 +95,79 @@ class ValidatorTests: XCTestCase {
         }
     }
     
+    func testDateRule() {
+        let d1 = Date(timeInterval: -20*60*60*24, since: Date())
+        let d2 = Date()
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "de_DE")
+        formatter.dateFormat = "dd.MM.yyyy"
+        
+        let rule = DateRule(lowBound: d1, highBound: d2, dateFormatter: formatter)
+        
+        let tenDayBefore: TimeInterval = -10*60*60*24
+        
+        do { // correct
+            let d3 = Date(timeInterval: tenDayBefore, since: Date())
+            XCTAssertTrue(rule.validate(value: formatter.string(from: d3)))
+        }
+        
+        do { // too young
+            let d3 = Date(timeInterval: -30*60*60*24, since: Date())
+            XCTAssertFalse(rule.validate(value: formatter.string(from: d3)))
+        }
+        
+        do { // too old
+            let d3 = Date(timeInterval: 30*60*60*24, since: Date())
+            XCTAssertFalse(rule.validate(value: formatter.string(from: d3)))
+        }
+        
+        do { // not a string
+            XCTAssertFalse(rule.validate(value: 12345))
+        }
+        
+        do { // wrong string format
+            let formatter = DateFormatter()
+            formatter.locale = Locale(identifier: "de_DE")
+            formatter.dateFormat = "yyyy.MM.dd"
+            let d3 = Date(timeInterval: tenDayBefore, since: Date())
+            XCTAssertFalse(rule.validate(value: formatter.string(from: d3)))
+        }
+    }
+    
+    func testMultiLength() {
+        do { // correct
+            let rule = MultiStringMinLengthRule(separator: .whitespaces, length: 2, 3)
+            XCTAssertTrue(rule.validate(value: "bla bla"))
+        }
+        do { // correct
+            let rule = MultiStringMinLengthRule(separator: .whitespaces, length: 2, 3)
+            XCTAssertTrue(rule.validate(value: " bla   bla  "))
+        }
+        do { // correct with more parts than length constraints
+            let rule = MultiStringMinLengthRule(separator: .whitespaces, length: 2, 3)
+            XCTAssertTrue(rule.validate(value: "bla bla bla"))
+        }
+        do { // not a string
+            let rule = MultiStringMinLengthRule(separator: .whitespaces, length: 2, 3)
+            XCTAssertFalse(rule.validate(value: 234))
+        }
+        do { // not enough parts
+            let rule = MultiStringMinLengthRule(separator: .whitespaces, length: 2, 3, 1)
+            XCTAssertFalse(rule.validate(value: "bla bla"))
+        }
+        do { // part is too short
+            let rule = MultiStringMinLengthRule(separator: .whitespaces, length: 2, 4)
+            XCTAssertFalse(rule.validate(value: "bla bla"))
+        }
+    }
+    
     func testValidator() {
+        
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "de_DE")
+        formatter.dateFormat = "dd.MM.yyyy"
+        
+        
         let v = Validator(datas: [
             "a": "31500",
             "b": "DE44500105175407324931",
@@ -103,7 +175,9 @@ class ValidatorTests: XCTestCase {
             "d": "john.appleseed@apple.com",
             "e": "1024,5 kWh",
             "e1": 200,
-            "f": "kWh"])
+            "f": "kWh",
+            "i": "12.10.1980",
+            "j": "Foo Bar"])
         
         v.validate("a", rules: [.zipCode], required: true)
         v.validate("b", rules: [.iban], required: true)
@@ -114,6 +188,8 @@ class ValidatorTests: XCTestCase {
         v.validate("f", rules: [.double(1, 2000)], required: true)
         v.validate("g", rules: [.double(1, 2000)], required: true)
         v.validate("h", rules: [.double(1, 2000)], required: false)
+        v.validate("i", rules: [.date(formatter.date(from: "01.01.1900")!, formatter.date(from: "01.01.2100")!, formatter)], required: true)
+        v.validate("j", rules: [.multiMinLength(.whitespaces, [1, 3])], required: true)
         
         let errors = v.validate()
         XCTAssert(errors.count == 2)
@@ -125,6 +201,8 @@ class ValidatorTests: XCTestCase {
         XCTAssertEqual(v["e"] as? Double, 1024.5)
         XCTAssertEqual(v["e1"] as? Double, 200)
         XCTAssertEqual(v["f"] as? Double, nil)
+        XCTAssertEqual(v["i"] as? Date, formatter.date(from: "12.10.1980"))
+        XCTAssertEqual(v["j"] as! [String], ["Foo", "Bar"])
     }
 
     static var allTests = [
