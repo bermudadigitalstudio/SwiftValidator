@@ -20,7 +20,9 @@ public class ZipCodeRule: Rule {
         var valid: String?
 
         for match in matches {
-            let stringRange =  value.index(value.startIndex, offsetBy: match.range.lowerBound)..<value.index(value.startIndex, offsetBy: match.range.upperBound)
+
+
+            let stringRange =  value.index(value.startIndex, offsetBy: match.range.location)..<value.index(value.startIndex, offsetBy: match.range.location + match.range.length)
             valid = value.substring(with: stringRange)
         }
 
