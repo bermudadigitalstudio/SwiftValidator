@@ -6,12 +6,26 @@ class ValidatorTests: XCTestCase {
     func testZipRule() {
         let zipCodeRule = ZipCodeRule()
 
-        XCTAssertTrue(zipCodeRule.validate(value: "31500"), "PASS")
-        XCTAssertFalse(zipCodeRule.validate(value: "315000"), "TOO LONG")
+        XCTAssertTrue(zipCodeRule.validate(value: "meine plz ist 14109 okay"), "PASS")
+        XCTAssertEqual(zipCodeRule.validatedValue as? String, "14109")
+
+        XCTAssertTrue(zipCodeRule.validate(value: "31509"), "PASS")
+        XCTAssertEqual(zipCodeRule.validatedValue as? String, "31509")
+
+        XCTAssertTrue(zipCodeRule.validate(value: "315000"))
+        XCTAssertEqual(zipCodeRule.validatedValue as? String, "31500")
+
+
         XCTAssertFalse(zipCodeRule.validate(value: "315"), "TOO SHORT")
-        XCTAssertFalse(zipCodeRule.validate(value: "aR31500"), "WRONG FORMAT")
+        XCTAssertNil(zipCodeRule.validatedValue)
+
+        XCTAssertTrue(zipCodeRule.validate(value: "aR31500"))
+        XCTAssertEqual(zipCodeRule.validatedValue as? String, "31500")
+
         XCTAssertFalse(zipCodeRule.validate(value: "qwert"), "ONLY NUMBERS")
+
         XCTAssertFalse(zipCodeRule.validate(value: 31500))
+        XCTAssertNil(zipCodeRule.validatedValue)
     }
 
     func testIBANRule() {

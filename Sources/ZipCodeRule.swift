@@ -13,18 +13,24 @@ public class ZipCodeRule: Rule {
     private(set) public var validatedValue: Any?
 
     public func validate(value: Any) -> Bool {
-        guard let value = value as? String, value.characters.count == 5  else { return false }
+        guard let value = value as? String  else { return false }
 
-        guard let regex = try? NSRegularExpression(pattern:"^\\d{5}$", options: []) else { return false }
-        let matches = regex.numberOfMatches(in:value, options: .anchored,
-                                            range: NSRange(location: 0, length: value.utf8.count))
-        
-        let valid = matches == 1
-        
-        if valid {
-            validatedValue = value
+        guard let regex = try? NSRegularExpression(pattern:"(\\d{5})", options: []) else { return false }
+        let matches = regex.matches(in: value, options: .reportCompletion, range:  NSRange(location: 0, length: value.utf8.count))
+        var valid: String?
+
+        for match in matches {
+            let stringRange =  value.index(value.startIndex, offsetBy: match.range.lowerBound)..<value.index(value.startIndex, offsetBy: match.range.upperBound)
+            valid = value.substring(with: stringRange)
         }
-        return valid
+
+        guard let validated = valid, matches.count == 1 else {
+            validatedValue = nil
+            return false
+        }
+
+        validatedValue = validated
+        return true
     }
 
     public func errorMessage() -> String {
