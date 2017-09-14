@@ -11,6 +11,8 @@ import Foundation
 public class MinLengthRule: Rule {
 
     let min: Int
+    
+    private(set) public var validatedValue: Any?
 
     public init(min: Int) {
         self.min = min
@@ -18,6 +20,7 @@ public class MinLengthRule: Rule {
 
     public func validate(value: Any) -> Bool {
         guard let value = value as? String, value.characters.count >= min  else { return false }
+        validatedValue = value
         return true
     }
 

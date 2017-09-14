@@ -11,4 +11,5 @@ import Foundation
 public protocol Rule {
     func validate(value: Any) -> Bool
     func errorMessage() -> String
+    var validatedValue: Any? {get}
 }
