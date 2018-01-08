@@ -13,11 +13,11 @@ public func parseNumber(_ s: String, floatSeparator: CChar = 44 /*,*/, thousandS
     var isMinus = false
     var isNumber = false
     var isFloat = false
-    
+
     var intPart = 0
     var floatPart = 0
     var divider = 1
-    
+
     for c in s.utf8CString {
         if (CChar(48)...CChar(57)).contains(c) { // 0...9
             if couldBeMinus {
@@ -61,12 +61,12 @@ public func parseNumber(_ s: String, floatSeparator: CChar = 44 /*,*/, thousandS
             break
         }
     }
-    
+
     let multiplicator = isMinus ? -1.0 : 1.0
-    
+
     guard isNumber else {
         return nil
     }
-    
+
     return (Double(intPart) + (Double(floatPart) / Double(divider))) * multiplicator
 }

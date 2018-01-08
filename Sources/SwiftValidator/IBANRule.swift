@@ -10,10 +10,10 @@ import Foundation
 
 public class IBANRule: Rule {
 
-    private let defaultsFormats = ["DE":"DE\\d{20}","GB":"GB\\d{2}[A-Z]{4}\\d{14}", "FR":"FR\\d{12}[A-Z0-9]{11}\\d{2}"]
+    private let defaultsFormats = ["DE":"DE\\d{20}", "GB":"GB\\d{2}[A-Z]{4}\\d{14}", "FR":"FR\\d{12}[A-Z0-9]{11}\\d{2}"]
 
     private(set) public var validatedValue: Any?
-    
+
     /// Validate an International Bank Account Number (IBAN)
     ///
     /// see https://en.wikipedia.org/wiki/International_Bank_Account_Number
@@ -26,10 +26,10 @@ public class IBANRule: Rule {
 
         let valueSanitized = value.components(separatedBy: .whitespacesAndNewlines).joined(separator: "").uppercased()
 
-        guard valueSanitized.characters.count > 8 && valueSanitized.characters.count < 34 else { return false }
+        guard valueSanitized.count > 8 && valueSanitized.count < 34 else { return false }
 
         let countryIndex = valueSanitized.index(valueSanitized.startIndex, offsetBy: 2)
-        let countryCode = valueSanitized.substring(to: countryIndex).uppercased()
+        let countryCode = String(valueSanitized[..<countryIndex]).uppercased()
 
         guard let format =  defaultsFormats[countryCode] else { return false }
 
@@ -40,18 +40,17 @@ public class IBANRule: Rule {
         guard matches == 1 else { return false }
 
         let valid = checkDigits(value: valueSanitized)
-        
+
         if valid {
             validatedValue = value
         }
-        
+
         return valid
     }
 
     public func errorMessage() -> String {
         return "Enter a valid IBAN"
     }
-
 
     /// Validating the IBAN
     ///
@@ -63,8 +62,7 @@ public class IBANRule: Rule {
 
         // Move the four initial characters to the end of the string
         let permuteIndex = value.index(value.startIndex, offsetBy: 4)
-        let permuteStr = value.substring(from: permuteIndex) + value.substring(to: permuteIndex)
-
+        let permuteStr = String(value[permuteIndex...]) + String(value[..<permuteIndex])
 
         // Replace each letter in the string with two digits, thereby expanding the string, where A = 10, B = 11, ..., Z = 35
         var tocheck = String()
@@ -81,7 +79,6 @@ public class IBANRule: Rule {
         return remainder == 1
     }
 
-
     /// Compute MOD 97
     ///
     /// see https://en.wikipedia.org/wiki/International_Bank_Account_Number#Modulo_operation_on_IBAN
@@ -91,22 +88,21 @@ public class IBANRule: Rule {
     func mod97(input: String) -> Int? {
         var remaining = input
         while true {
-            let chunkSize = remaining.characters.count < 9 ? remaining.characters.count : 9
+            let chunkSize = remaining.count < 9 ? remaining.count : 9
 
-            if let chunk = Int(remaining.substring(with: Range<String.Index>( remaining.startIndex..<remaining.index(remaining.startIndex, offsetBy: chunkSize)))) {
-                if chunk < 97 || remaining.characters.count < 3 {
+            if let chunk = Int( String(remaining[Range<String.Index>( remaining.startIndex..<remaining.index(remaining.startIndex, offsetBy: chunkSize))])) {
+                if chunk < 97 || remaining.count < 3 {
                     break
                 }
 
                 let remainder = chunk % 97
-                remaining = "\(remainder)\(remaining.substring(from:  remaining.index(remaining.startIndex, offsetBy: chunkSize)))"
+                remaining = "\(remainder)\(String(remaining[remaining.index(remaining.startIndex, offsetBy: chunkSize)...]))"
             } else {
                 break
             }
-            
+
         }
 
         return Int(remaining)
     }
 }
-

@@ -9,7 +9,7 @@
 import Foundation
 
 public class ZipCodeRule: Rule {
-    
+
     private(set) public var validatedValue: Any?
 
     public func validate(value: Any) -> Bool {
@@ -21,9 +21,8 @@ public class ZipCodeRule: Rule {
 
         for match in matches {
 
-
             let stringRange =  value.index(value.startIndex, offsetBy: match.range.location)..<value.index(value.startIndex, offsetBy: match.range.location + match.range.length)
-            valid = value.substring(with: stringRange)
+            valid = String(value[stringRange])
         }
 
         guard let validated = valid, matches.count == 1 else {

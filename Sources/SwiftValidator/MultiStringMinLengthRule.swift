@@ -9,11 +9,11 @@
 import Foundation
 
 public class MultiStringMinLengthRule: Rule {
-    
+
     let minLengths: [Int]
     let separator: CharacterSet
     var error: String?
-    
+
     public init(separator: CharacterSet, length: [Int]) {
         self.separator = separator
         self.minLengths = length
@@ -22,7 +22,7 @@ public class MultiStringMinLengthRule: Rule {
         self.separator = separator
         self.minLengths = length
     }
-    
+
     public var validatedValue: Any?
     public func validate(value: Any) -> Bool {
         guard let string = value as? String else {
@@ -30,14 +30,14 @@ public class MultiStringMinLengthRule: Rule {
             return false
         }
         let strings = string.components(separatedBy: separator).filter { (s) -> Bool in
-            return s.characters.isEmpty == false
+            return s.isEmpty == false
         }
         guard strings.count >= minLengths.count else {
             error = "Expected string to be separated into \(minLengths.count) parts, but was only \(strings.count)"
             return false
         }
         for i in 0..<minLengths.count {
-            if strings[i].characters.count < minLengths[i] {
+            if strings[i].count < minLengths[i] {
                 error = "`\(strings[i])` is shorter than \(minLengths[i])"
                 return false
             }

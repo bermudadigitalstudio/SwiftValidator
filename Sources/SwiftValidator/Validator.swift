@@ -66,10 +66,10 @@ public class Validator {
         validators.append(Field(fieldName, rules: rules, required: required))
     }
 
-    public func validate() -> [String:String] {
+    public func validate() -> [String: String] {
 
-        var errors: [String:String] = [:]
-        var values: [String:Any] = [:]
+        var errors: [String: String] = [:]
+        var values: [String: Any] = [:]
         validators.forEach { validator in
             if let fieldValue = datas[validator.name] {
                 validator.rules.forEach { ruleType in
@@ -89,7 +89,7 @@ public class Validator {
         validatedValues = values
         return errors
     }
-    
+
     public subscript(key: String) -> Any? {
         return validatedValues[key]
     }

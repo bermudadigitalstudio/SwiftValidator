@@ -12,7 +12,7 @@ public class IntegerRule: Rule {
 
     let min: Int
     let max: Int
-    
+
     private(set) public var validatedValue: Any?
 
     public init(min: Int, max: Int) {
@@ -25,7 +25,7 @@ public class IntegerRule: Rule {
         if let i = value as? Int {
             number = i
         } else if let s = value as? String,
-            let d = parseNumber(s){
+            let d = parseNumber(s) {
             number = Int(d)
         }
         guard let n = number, n >= min, n <= max  else { return false }
