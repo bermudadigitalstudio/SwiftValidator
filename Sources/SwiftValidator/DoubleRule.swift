@@ -30,6 +30,21 @@ public class DoubleRule: Rule {
         if let d = value as? Double {
             number = d
         } else if let s = value as? String {
+            // This part of the code makes sure that if we've got a string here
+            // that there are no pieces outside what a double might contain.
+            // This is so we will not get false validations on strings that contain digits
+            // and needs to be here because casting as? Int and as? Dobule
+            // are fundamentally flawed in Swift and do not work quite right.
+            // So... don't get rid of this without lots of testing
+
+            // Make a character set of digits, commas, and decimal points
+            // (Things we could have in a double)
+            let doubleCharacters = CharacterSet.decimalDigits.union(CharacterSet(charactersIn: ".,"))
+            // If trimming characters returns anything, we have characters outside of what
+            // might be a double, so don't validate it (false)
+            guard s.trimmingCharacters(in: doubleCharacters).isEmpty else {
+                return false
+            }
 
             let formatter = NumberFormatter()
             formatter.locale = self.locale

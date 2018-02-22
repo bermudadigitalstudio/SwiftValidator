@@ -26,6 +26,22 @@ public class IntegerRule: Rule {
             number = i
         } else if let s = value as? String,
             let d = parseNumber(s) {
+
+            // This part of the code makes sure that if we've got a string here
+            // that there are no pieces outside what a double might contain.
+            // This is so we will not get false validations on strings that contain digits
+            // and needs to be here because casting as? Int and as? Dobule
+            // are fundamentally flawed in Swift and do not work quite right.
+            // So... don't get rid of this without lots of testing
+
+            // (Things we could have in int)
+            let intChars = CharacterSet.decimalDigits
+            // If trimming characters returns anything, we have characters outside of what
+            // might be an Int, so don't validate it (false)
+            guard s.trimmingCharacters(in: intChars).isEmpty else {
+                return false
+            }
+
             number = Int(d)
         }
         guard let n = number, n >= min, n <= max  else { return false }
