@@ -1,11 +1,12 @@
-FROM swift:4
+FROM moonshotenergy/swift:4
+
 
 WORKDIR /code
 
-COPY Package.swift /code/.
+COPY Package.swift /code/
 
-
-RUN swift build || true
+RUN swift -version
+RUN swift package resolve
 
 COPY ./Sources /code/Sources
 COPY ./Tests /code/Tests

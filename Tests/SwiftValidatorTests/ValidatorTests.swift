@@ -6,8 +6,7 @@ class ValidatorTests: XCTestCase {
     func testZipRule() {
         let zipCodeRule = ZipCodeRule()
 
-        XCTAssertTrue(zipCodeRule.validate(value: "meine plz ist 14109 okay"), "PASS")
-        XCTAssertEqual(zipCodeRule.validatedValue as? String, "14109")
+        XCTAssertFalse(zipCodeRule.validate(value: "meine plz ist 14109 okay"), "PASS")
 
         XCTAssertTrue(zipCodeRule.validate(value: "31509"), "PASS")
         XCTAssertEqual(zipCodeRule.validatedValue as? String, "31509")
@@ -18,8 +17,7 @@ class ValidatorTests: XCTestCase {
         XCTAssertFalse(zipCodeRule.validate(value: "315"), "TOO SHORT")
         XCTAssertNil(zipCodeRule.validatedValue)
 
-        XCTAssertTrue(zipCodeRule.validate(value: "aR31500"))
-        XCTAssertEqual(zipCodeRule.validatedValue as? String, "31500")
+        XCTAssertFalse(zipCodeRule.validate(value: "aR31500"))
 
         XCTAssertFalse(zipCodeRule.validate(value: "qwert"), "ONLY NUMBERS")
 
@@ -63,7 +61,7 @@ class ValidatorTests: XCTestCase {
             XCTAssertFalse(intRule.validate(value: $0))
         }
 
-        ["number is 10", "250 kWh", "I think it was 100 or so"].forEach {
+        ["10", "250", "100"].forEach {
             XCTAssertTrue(intRule.validate(value: $0))
         }
 
@@ -205,7 +203,7 @@ class ValidatorTests: XCTestCase {
             "b": "DE44500105175407324931",
             "c": "250",
             "d": "john.appleseed@apple.com",
-            "e": "1024,5 kWh",
+            "e": "1024,5",
             "e1": 200,
             "f": "kWh",
             "i": "12.10.1980",

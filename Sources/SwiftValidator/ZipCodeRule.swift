@@ -15,6 +15,12 @@ public class ZipCodeRule: Rule {
     public func validate(value: Any) -> Bool {
         guard let value = value as? String  else { return false }
 
+        // Make sure this is only digits
+        let digitChars = CharacterSet.decimalDigits
+        guard value.trimmingCharacters(in: digitChars).isEmpty else {
+            return false
+        }
+
         guard let regex = try? NSRegularExpression(pattern:"(\\d{5})", options: []) else { return false }
         let matches = regex.matches(in: value, options: .reportCompletion, range:  NSRange(location: 0, length: value.utf8.count))
         var valid: String?
