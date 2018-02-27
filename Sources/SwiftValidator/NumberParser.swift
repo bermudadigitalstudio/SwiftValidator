@@ -68,5 +68,6 @@ public func parseNumber(_ s: String, floatSeparator: CChar = 44 /*,*/, thousandS
         return nil
     }
 
-    return (Double(intPart) + (Double(floatPart) / Double(divider))) * multiplicator
+    let final = (Double(intPart) + (Double(floatPart) / Double(divider))) * multiplicator
+    return final
 }
