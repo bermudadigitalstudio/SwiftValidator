@@ -109,6 +109,14 @@ class ValidatorTests: XCTestCase {
             XCTAssertTrue(doubleRule.validate(value: $0))
         }
 
+        ["1.000,5"].forEach {
+            XCTAssertTrue(doubleRule.validate(value: $0))
+        }
+
+        ["1.000.000,5"].forEach {
+            XCTAssertFalse(doubleRule.validate(value: $0))
+        }
+
         ["10,43", "250", "100"].forEach {
             XCTAssertTrue(doubleRule.validate(value: $0))
         }
